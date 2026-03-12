@@ -1,38 +1,52 @@
-﻿namespace Nuolia_kaupan
+﻿class Program
 {
-    enum Karki
+    static void Main()
     {
-        Puu,
-        Teräs,
-        Timantti
-    }
+        Console.WriteLine("Tervetuloa nuolikauppaan.");
+        Console.WriteLine("Haluatko:");
+        Console.WriteLine("1. Teettää nuolen tilaustyönä?");
+        Console.WriteLine("2. Ostaa valmiin nuolen?");
+        Console.Write("Valinta: ");
+        string valinta = Console.ReadLine();
 
-    enum Pera
-    {
-        Lehti,
-        Kanansulka,
-        Kotkansulka
-    }
+        Nuoli nuoli;
 
-    class Program
-    {
-        static void Main()
+        if (valinta == "1")
         {
-            Console.Write("Minkälainen kärki (puu, teräs, timantti)?: ");
-            string karkiSyote = Console.ReadLine();
-            Karki karki = (Karki)Enum.Parse(typeof(Karki), karkiSyote, true);
+            Console.Write("Valitse kärki (puu, teräs, timantti): ");
+            Karki karki = (Karki)Enum.Parse(typeof(Karki), Console.ReadLine(), true);
 
-            Console.Write("Minkälaiset sulat (lehti, kanansulka, kotkansulka)?: ");
-            string peraSyote = Console.ReadLine();
-            Pera pera = (Pera)Enum.Parse(typeof(Pera), peraSyote, true);
+            Console.Write("Valitse perä (lehti, kanansulka, kotkansulka): ");
+            Pera pera = (Pera)Enum.Parse(typeof(Pera), Console.ReadLine(), true);
 
-            Console.Write("Nuolen pituus sentteinä (60-100): ");
+            Console.Write("Nuolen pituus (60–100): ");
             int pituus = int.Parse(Console.ReadLine());
 
-            Nuoli nuoli = new Nuoli(karki, pera, pituus);
-
-            double hinta = nuoli.PalautaHinta();
-            Console.WriteLine("Tämän nuolen hinta on " + hinta + " kultarahaa.");
+            nuoli = new Nuoli(karki, pera, pituus);
         }
+        else if (valinta == "2")
+        {
+            Console.WriteLine("Valitse valmis nuoli:");
+            Console.WriteLine("1. Eliittinuoli");
+            Console.WriteLine("2. Aloittelijanuoli");
+            Console.WriteLine("3. Perusnuoli");
+            Console.Write("Valinta: ");
+            string valmis = Console.ReadLine();
+
+            if (valmis == "1")
+                nuoli = Nuoli.LuoEliittiNuoli();
+            else if (valmis == "2")
+                nuoli = Nuoli.LuoAloittelijaNuoli();
+            else
+                nuoli = Nuoli.LuoPerusNuoli();
+        }
+        else
+        {
+            Console.WriteLine("Virheellinen valinta.");
+            return;
+        }
+
+        double hinta = nuoli.PalautaHinta();
+        Console.WriteLine($"Valitsemasi nuolen hinta on {hinta} kultarahaa.");
     }
 }

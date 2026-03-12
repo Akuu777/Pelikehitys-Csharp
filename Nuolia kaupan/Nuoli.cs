@@ -1,5 +1,19 @@
 ﻿namespace Nuolia_kaupan
 {
+    enum Karki
+    {
+        Puu,
+        Teräs,
+        Timantti
+    }
+
+    enum Pera
+    {
+        Lehti,
+        Kanansulka,
+        Kotkansulka
+    }
+
     class Nuoli
     {
         public Karki karki { get; }
@@ -11,6 +25,21 @@
             karki = k;
             pera = p;
             pituus = pit;
+        }
+
+        public static Nuoli LuoEliittiNuoli()
+        {
+            return new Nuoli(Karki.Timantti, Pera.Kotkansulka, 100);
+        }
+
+        public static Nuoli LuoAloittelijaNuoli()
+        {
+            return new Nuoli(Karki.Puu, Pera.Kanansulka, 70);
+        }
+
+        public static Nuoli LuoPerusNuoli()
+        {
+            return new Nuoli(Karki.Teräs, Pera.Kanansulka, 85);
         }
 
         public double PalautaHinta()
