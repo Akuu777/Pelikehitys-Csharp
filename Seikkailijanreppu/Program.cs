@@ -13,31 +13,37 @@
 public class Nuoli : Tavara
 {
     public Nuoli() : base(0.1, 0.05) { }
+    public override string ToString() => "Nuoli";
 }
 
 public class Jousi : Tavara
 {
     public Jousi() : base(1, 4) { }
+    public override string ToString() => "Jousi";
 }
 
 public class Koysi : Tavara
 {
     public Koysi() : base(1, 1.5) { }
+    public override string ToString() => "Köysi";
 }
 
 public class Vesi : Tavara
 {
     public Vesi() : base(2, 2) { }
+    public override string ToString() => "Vesi";
 }
 
 public class Ruoka : Tavara
 {
     public Ruoka() : base(1, 0.5) { }
+    public override string ToString() => "Ruoka";
 }
 
 public class Miekka : Tavara
 {
     public Miekka() : base(5, 3) { }
+    public override string ToString() => "Miekka";
 }
 
 public class Reppu
@@ -70,6 +76,15 @@ public class Reppu
         NykyTilavuus += t.Tilavuus;
         return true;
     }
+
+    public override string ToString()
+    {
+        if (tavarat.Count == 0)
+            return "Reppu on tyhjä.";
+
+        return "Reppussa on seuraavat tavarat: " +
+               string.Join(", ", tavarat);
+    }
 }
 
 class Program
@@ -77,6 +92,8 @@ class Program
     static void Main()
     {
         Reppu reppu = new Reppu(10, 30, 20);
+
+        Console.WriteLine(reppu.ToString());
 
         while (true)
         {
@@ -111,7 +128,10 @@ class Program
             }
 
             if (reppu.Lisaa(t))
+            {
                 Console.WriteLine("Lisättiin reppuun.");
+                Console.WriteLine(reppu.ToString());
+            }
             else
                 Console.WriteLine("Ei mahdu.");
         }
