@@ -1,13 +1,17 @@
-﻿public class Robotti
+﻿public interface IRobottiKäsky
+{
+    void Suorita(Robotti robotti);
+}
+public class Robotti
 {
     public int X { get; set; }
     public int Y { get; set; }
     public bool OnKäynnissä { get; set; }
-    public RobottiKäsky?[] Käskyt { get; } = new RobottiKäsky?[3];
+    public IRobottiKäsky?[] Käskyt { get; } = new IRobottiKäsky?[3];
 
     public void Suorita()
     {
-        foreach (RobottiKäsky? käsky in Käskyt)
+        foreach (var käsky in Käskyt)
         {
             käsky?.Suorita(this);
             Console.WriteLine($"Robotti: [{X} {Y} {OnKäynnissä}]");
@@ -15,65 +19,90 @@
     }
 }
 
-public abstract class RobottiKäsky
+public class Käynnistä : IRobottiKäsky
 {
-    public abstract void Suorita(Robotti robotti);
+    public void Suorita(Robotti robotti)
+    {
+        robotti.OnKäynnissä = true;
+    }
 }
-
-public class Käynnistä : RobottiKäsky
+public class Sammuta : IRobottiKäsky
 {
-    public override void Suorita(Robotti robotti) => robotti.OnKäynnissä = true;
+    public void Suorita(Robotti robotti)
+    {
+        robotti.OnKäynnissä = false;
+    }
 }
-
-public class Sammuta : RobottiKäsky
+public class YlösKäsky : IRobottiKäsky
 {
-    public override void Suorita(Robotti robotti) => robotti.OnKäynnissä = false;
+    public void Suorita(Robotti robotti)
+    {
+        if (robotti.OnKäynnissä)
+            robotti.Y++;
+    }
 }
-
-public class YlösKäsky : RobottiKäsky
+public class AlasKäsky : IRobottiKäsky
 {
-    public override void Suorita(Robotti robotti) { if (robotti.OnKäynnissä) robotti.Y++; }
+    public void Suorita(Robotti robotti)
+    {
+        if (robotti.OnKäynnissä)
+            robotti.Y--;
+    }
 }
-
-public class AlasKäsky : RobottiKäsky
+public class VasenKäsky : IRobottiKäsky
 {
-    public override void Suorita(Robotti robotti) { if (robotti.OnKäynnissä) robotti.Y--; }
+    public void Suorita(Robotti robotti)
+    {
+        if (robotti.OnKäynnissä)
+            robotti.X--;
+    }
 }
-
-public class VasenKäsky : RobottiKäsky
+public class OikeaKäsky : IRobottiKäsky
 {
-    public override void Suorita(Robotti robotti) { if (robotti.OnKäynnissä) robotti.X--; }
+    public void Suorita(Robotti robotti)
+    {
+        if (robotti.OnKäynnissä)
+            robotti.X++;
+    }
 }
-
-public class OikeaKäsky : RobottiKäsky
-{
-    public override void Suorita(Robotti robotti) { if (robotti.OnKäynnissä) robotti.X++; }
-}
-
 class Program
 {
     static void Main()
     {
-        Robotti robotti = new Robotti();
+        var robotti = new Robotti();
 
-        for (int i = 0; i < robotti.Käskyt.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
-            Console.Write("Mitä komentoja syötetään robotille? Vaihtoehdot: Käynnistä, Sammuta, Ylös, Alas, Oikea, Vasen.\n");
-            string? syöte = Console.ReadLine()?.Trim();
+            Console.WriteLine("Mitä komentoja syötetään robotille? Vaihtoehdot: Käynnistä, Sammuta, Ylös, Alas, Oikea, Vasen.");
+            string syöte = Console.ReadLine()!;
 
-            robotti.Käskyt[i] = syöte switch
+            switch (syöte)
             {
-                "Käynnistä" => new Käynnistä(),
-                "Sammuta" => new Sammuta(),
-                "Ylös" => new YlösKäsky(),
-                "Alas" => new AlasKäsky(),
-                "Vasen" => new VasenKäsky(),
-                "Oikea" => new OikeaKäsky(),
-                _ => null
-            };
+                case "Käynnistä":
+                    robotti.Käskyt[i] = new Käynnistä();
+                    break;
+                case "Sammuta":
+                    robotti.Käskyt[i] = new Sammuta();
+                    break;
+                case "Ylös":
+                    robotti.Käskyt[i] = new YlösKäsky();
+                    break;
+                case "Alas":
+                    robotti.Käskyt[i] = new AlasKäsky();
+                    break;
+                case "Vasen":
+                    robotti.Käskyt[i] = new VasenKäsky();
+                    break;
+                case "Oikea":
+                    robotti.Käskyt[i] = new OikeaKäsky();
+                    break;
+                default:
+                    Console.WriteLine("Tuntematon käsky.");
+                    i--;
+                    break;
+            }
         }
 
-        Console.WriteLine();
         robotti.Suorita();
     }
 }
